@@ -1,6 +1,0 @@
-services:
-  - type: web
-    name: attendance-django
-    env: python
-    buildCommand: "./build.sh"
-    startCommand: "gunicorn ATTENDANCE.wsgi:application"
