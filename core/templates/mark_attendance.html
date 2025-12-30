@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance System - Mark Attendance</title>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background-color: #f4f4f4;
+        color: #E3E6EB;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* ================= NAVBAR ================= */
+    nav {
+        background-color: #E3E6EB;
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+
+    nav .back-arrow {
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: #788A72;
+        display: none; /* hidden by default on desktop */
+    }
+
+    nav h2 {
+        font-size: 1.5rem;
+        color: #788A72;
+        margin: 0;
+    }
+
+    nav a {
+        background-color: #788A72;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        color: white;
+        white-space: nowrap;
+    }
+
+    nav a:hover {
+        text-decoration: underline;
+    }
+
+    /* ================= CONTAINER ================= */
+    .container {
+        max-width: 900px;
+        margin: 2rem auto;
+        background-color: #788A72;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        text-decoration: underline;
+    }
+
+    /* ================= TABLE ================= */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+
+    th, td {
+        padding: 0.8rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+
+    th {
+        background-color: #788A72;
+    }
+
+    tr:hover {
+        background-color: rgba(255,255,255,0.1);
+    }
+
+    input[type="checkbox"] {
+        transform: scale(1.3);
+        cursor: pointer;
+    }
+
+    /* ================= BUTTON ================= */
+    button {
+        margin-top: 1.5rem;
+        width: 100%;
+        padding: 0.8rem;
+        background-color: #788A72;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    button:hover {
+        text-decoration: underline;
+    }
+
+    /* ================= SELECT ================= */
+    select {
+        width: 100%;
+        padding: 0.7rem;
+        margin-bottom: 1rem;
+        border-radius: 5px;
+        border: none;
+        background-color: #E3E6EB;
+        font-size: 1rem;
+        color: #333;
+        color: #788A72 ;
+    }
+
+    select option {
+        color: #788A72 ;
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 768px) {
+        nav {
+            justify-content: space-between;
+        }
+
+        nav .back-arrow {
+            display: block;
+        }
+
+        nav h2 {
+            text-align: center;
+            flex: 1;
+        }
+
+        nav > div {
+            margin-left: auto;
+        }
+
+        table th, table td {
+            font-size: 0.9rem;
+            padding: 0.6rem;
+        }
+
+        select, button {
+            font-size: 0.95rem;
+            padding: 0.6rem;
+        }
+
+        .container {
+            margin: 1rem;
+        }
+    }
+
+    @media (min-width: 769px) {
+        nav {
+            justify-content: flex-start;
+        }
+
+        nav .back-arrow {
+            display: none;
+        }
+
+        nav h2 {
+            margin-right: auto;
+        }
+    }
+</style>
+</head>
+<body>
+    {% include "partials/nav.html" %}
+<nav>
+    <p class="back-arrow">&#8592;</p>
+    <h2>Attendance System</h2>
+    <div>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Mark Attendance</h1>
+
+    <form method="POST" >
+        {% csrf_token %}
+
+        <select name="classroom_id" required>
+            <option value="">Select Classroom</option>
+            {% for classroom in classrooms %}
+                <option value="{{ classroom.id }}">{{ classroom.name }}</option>
+            {% endfor %}
+        </select>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Roll No</th>
+                    <th>Name</th>
+                    <th>Attendance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in data %}
+                <tr>
+                    <td>{{ d.roll_number }}</td>
+                    <td>{{ d.user.username }}</td>
+                    <td>
+                        <input type="checkbox" name="present_students" value="{{ d.id }}">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit" style='background-color:#E3E6EB; color:#788A72;'>Save Attendance</button>
+        
+
+        
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const arrow = document.querySelector('.back-arrow');
+        arrow.addEventListener('click', () => {
+            window.location.href = '/dashboard/teacher/'; 
+        });
+    });
+</script>
+</body>
+</html>

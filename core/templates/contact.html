@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            background-color: #f5f7f6;
+            color: #333;
+        }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            background-color: #6f8f7a;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;           /* PREVENT COLLISION */
+            flex-wrap: wrap;     /* STACK ON SMALL SCREENS */
+        }
+
+        .nav-left,
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            white-space: nowrap;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login {
+            color: white;
+        }
+
+        .signup {
+            background-color: #4f6f5a;
+            color: white;
+        }
+
+        /* ================= HEADER ================= */
+        .header {
+            background-color: white;
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            color: #4f6f5a;
+            letter-spacing: 1px;
+        }
+
+        /* ================= CONTACT ================= */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 50px 80px;
+        }
+
+        .contact-info,
+        .contact-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #cfdad3;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .contact-info h2,
+        .contact-form h2 {
+            color: #4f6f5a;
+            margin-bottom: 15px;
+        }
+
+        .contact-info p {
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .contact-form textarea {
+            resize: none;
+            height: 120px;
+        }
+
+        .contact-form button {
+            background-color: #6f8f7a;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .contact-form button:hover {
+            background-color: #4f6f5a;
+        }
+
+        /* ================= FOOTER ================= */
+        footer {
+            background-color: #6f8f7a;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 900px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                padding: 40px 30px;
+            }
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .nav-left,
+            .nav-right {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+    </div>
+
+    <div class="nav-right">
+        {% if user.is_authenticated %}
+            <a href="/dashboard/student" class="btn login">Dashboard</a>
+            <a href="/logout" class="btn signup">Logout</a>
+        {% else %}
+            <a href="/login" class="btn login">Login</a>
+            <a href="/register" class="btn signup">Register</a>
+        {% endif %}
+    </div>
+</nav>
+
+<section class="header">
+    <h1>CONTACT US</h1>
+</section>
+
+<section class="contact-container">
+    <div class="contact-info">
+        <h2>Get in Touch</h2>
+        <p><strong>Govt College Women University</strong></p>
+        <p>📍 Main Campus, Pakistan</p>
+        <p>📞 +92 300 1234567</p>
+        <p>✉️ info@gcw.edu.pk</p>
+        <p>
+            Feel free to contact us for admissions, programs,
+            or any academic information.
+        </p>
+    </div>
+
+    <div class="contact-form">
+        <h2>Send a Message</h2>
+        <form>
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+            <input type="text" placeholder="Subject">
+            <textarea placeholder="Your Message"></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+</section>
+
+<footer>
+    © 2025 Govt College Women University | All Rights Reserved
+</footer>
+
+</body>
+</html>

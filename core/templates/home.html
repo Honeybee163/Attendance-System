@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            background-color: #f5f7f6;
+            color: #333;
+        }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            background-color: #6f8f7a;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;                 /* PREVENT COLLISION */
+            flex-wrap: wrap;           /* ALLOW STACKING */
+        }
+
+        .nav-left,
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            white-space: nowrap;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login {
+            color: white
+
+        }
+
+        .signup {
+            background-color: #4f6f5a;
+            color: white;
+        }
+
+        /* ================= HERO ================= */
+        .hero {
+            background-color: white;
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .hero h1 {
+            color: #4f6f5a;
+            letter-spacing: 1px;
+        }
+
+        /* ================= INTRO ================= */
+        .intro {
+            text-align: center;
+            padding: 40px 80px;
+        }
+
+        .intro h2 {
+            color: #4f6f5a;
+            margin-bottom: 15px;
+        }
+
+        .intro p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* ================= CARDS ================= */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 25px;
+            padding: 40px 60px;
+        }
+
+        .card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #cfdad3;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .card h3 {
+            color: #4f6f5a;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .nav-left,
+            .nav-right {
+                width: 100%;
+                justify-content: center;   /* CENTER ITEMS */
+            }
+
+            .intro {
+                padding: 30px 20px;
+            }
+
+            .cards {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+    </div>
+
+    <div class="nav-right">
+        {% if user.is_authenticated %}
+            <a href="/dashboard/student" class="btn login">Dashboard</a>
+            <a href="/logout" class="btn signup">Logout</a>
+        {% else %}
+            <a href="/login" class="btn login">Login</a>
+            <a href="/register" class="btn signup">Register</a>
+        {% endif %}
+    </div>
+</nav>
+
+<section class="hero">
+    <h1>WELCOME TO GOVT COLLEGE WOMEN UNIVERSITY</h1>
+</section>
+
+<section class="intro">
+    <h2>Govt University Unfiltered</h2>
+    <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates, maiores.
+        Tempore facere dolorum aliquid impedit iure totam consequatur.
+    </p>
+</section>
+
+<section class="cards">
+    <div class="card">
+        <h3>Card One</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae quasi atque veniam autem.</p>
+    </div>
+    <div class="card">
+        <h3>Card Two</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae quasi atque veniam autem.</p>
+    </div>
+    <div class="card">
+        <h3>Card Three</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae quasi atque veniam autem.</p>
+    </div>
+    <div class="card">
+        <h3>Card Four</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae quasi atque veniam autem.</p>
+    </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance System - Register</title>
+<style>
+    /* General Styles */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background-color: #f4f4f4;
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* ================= NAVBAR ================= */
+    nav {
+        color: #788A72;
+        background-color: #E3E6EB;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: nowrap;  /* Keep title and button on same line */
+    }
+
+    nav .title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        white-space: nowrap; /* Prevent wrapping */
+    }
+
+    nav a {
+        background-color: #788A72;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        color: #E3E6EB;
+        transition: background 0.3s;
+        white-space: nowrap;
+    }
+
+    nav a:hover {
+        background-color: #788A72;
+        text-decoration: underline;
+    }
+
+    /* ================= MAIN CONTENT ================= */
+    main {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+    }
+
+    /* Form Container */
+    .form-container {
+        width: 100%;
+        max-width: 450px;
+        background-color: #788A72;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+        color: white;
+    }
+
+    form p {
+        margin-bottom: 1rem;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 0.7rem;
+        margin-top: 0.3rem;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        background-color: #E3E6EB;
+        color: #333;
+    }
+
+    button {
+        width: 100%;
+        padding: 0.8rem;
+        margin-top: 1rem;
+        border: none;
+        border-radius: 5px;
+        background-color: #E3E6EB;
+        color: #788A72;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    button:hover {
+        background-color: #788A72;
+        color: #E3E6EB;
+        text-decoration: underline;
+    }
+
+    .form-container .errorlist {
+    color: #ff6b6b;
+    margin: 0.3rem 0 0 0;
+    padding-left: 1rem;
+    list-style-type: disc;
+    font-size: 0.9rem;
+}
+
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 768px) {
+        nav {
+            padding: 1rem;
+            justify-content: space-between; /* Keep in one row */
+        }
+
+        nav a {
+            margin-top: 0; /* Remove stacking */
+        }
+
+        .form-container {
+            padding: 1.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        main {
+            padding: 1rem;
+        }
+
+        .form-container {
+            margin: 0 1rem;
+            padding: 1rem;
+        }
+
+        .form-container h2 {
+            font-size: 1.5rem;
+        }
+
+        input, select, button {
+            font-size: 0.95rem;
+            padding: 0.6rem;
+        }
+    }
+</style>
+</head>
+<body>
+    {% include "partials/nav.html" %}
+    <nav>
+        <div class="title">Attendance System</div>
+        <a href="{% url 'login' %}">Login</a>
+    </nav>
+
+    <main>
+        <div class="form-container">
+            <h2>Register</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {% for field in user_form %}
+    <p>
+        {{ field.label_tag }}<br>
+        {{ field }}
+        {% if field.errors %}
+            <ul style="color: #ff6b6b; margin: 0.3rem 0 0 0; padding-left: 1rem;">
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </p>
+{% endfor %}
+
+{% if user_form.non_field_errors %}
+    <ul style="color: #ff6b6b; margin-top: 0.5rem; padding-left: 1rem;">
+        {% for error in user_form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

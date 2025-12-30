@@ -1,0 +1,152 @@
+
+{% load dict_extras %}
+{% load tz %}
+{% load attendance_extras %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Students</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+
+    .report {
+        text-align: center;
+        color: #788A72;
+        text-decoration: underline;
+        background-color: #E3E6EB;
+        padding: 1rem 0;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .table-container {
+        max-width: 1000px;
+        margin: auto;
+        background-color: #788A72;
+        padding: 1.5rem;
+        border-radius: 10px;
+        color: white;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+    }
+
+    th, td {
+        padding: 0.8rem;
+        border-bottom: 1px solid rgba(255,255,255,0.3);
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    th {
+        background-color: #788A72;
+    }
+
+    tr:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    a.download-link {
+        color: #fff;
+        font-size: 12px;
+        text-decoration: underline;
+    }
+
+    span.not-available {
+        font-size: 12px;
+        color: #ffdede;
+    }
+
+    .no-data {
+        text-align: center;
+        color: white;
+        font-size: 1.2rem;
+        padding: 1rem 0;
+    }
+
+    @media (max-width: 768px) {
+        .report {
+            font-size: 1.3rem;
+        }
+
+        th, td {
+            padding: 0.6rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .report {
+            font-size: 1.1rem;
+        }
+
+        th, td {
+            font-size: 0.85rem;
+            padding: 0.5rem;
+        }
+    }
+</style>
+</head>
+<body>
+{% include "partials/nav.html" %}
+
+<h1 class='report'>Monthly Report</h1>
+
+<div class="table-container">
+    {% if not all_students %}
+        <p class="no-data">No Students Registered Yet.</p>
+    {% else %}
+
+<table>
+  <thead>
+    <tr>
+      <th>Roll No</th>
+      <th>Name</th>
+
+      {% for classroom in classrooms %}
+      <th>
+          {{ classroom.name }}
+          <br>
+          <a href="{% url 'download_attendance_csv' classroom.id %}" class="download-link">Download CSV</a>
+      </th>
+      {% endfor %}
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for student in all_students %}
+      <tr>
+        <td>{{ student.roll_number }}</td>
+        <td>{{ student.user.username }}</td>
+
+        {% for classroom in classrooms %}
+            {% with key=student.user.username|stringformat:"s"|add:"_"|add:classroom.name %}
+                <td>
+                  {% with attended=attendance_count|get_item:key total=classes|get_item:classroom.name %}
+                      {{ attended }}/{{ total }} ({{ attended|percentage:total }}%)
+                  {% endwith %}
+                </td>
+            {% endwith %}
+        {% endfor %}
+
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+    {% endif %}
+</div>
+
+</body>
+</html>
