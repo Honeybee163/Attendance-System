@@ -1,14 +1,14 @@
 {
   "builds": [
     {
-      "src": "Attendance/wsgi.py",
+      "src": "ATTENDANCE/wsgi.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "Attendance/wsgi.py"
+      "dest": "ATTENDANCE/wsgi.py"
     }
   ]
 }
