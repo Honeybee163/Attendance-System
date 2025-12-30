@@ -1,17 +1,18 @@
 {
-    "builds": [
-        {
-            "src": "ATTENDANCE/wsgi.py",
-            "use": "@vercel/python",
-            "config": {
-                "maxLambdaSize": "20mb","runtime": "python3.10"
-            }
-        }
-    ],
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "ATTENDANCE/wsgi.py"
-        }
-    ]
+  "builds": [
+    {
+      "src": "ATTENDANCE/wsgi.py",
+      "use": "@vercel/python",
+      "config": {
+        "runtime": "python3.10",
+        "maxLambdaSize": "20mb"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "ATTENDANCE/wsgi.py"
+    }
+  ]
 }
