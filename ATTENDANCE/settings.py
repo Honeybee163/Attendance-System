@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-7l-8*=p$cug-i13jsi%m5vvs1odd&9jify0d^9@a5$ges01%_8
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*.vercel.app", "localhost", "127.0.0.1"]
+
 
 
 
@@ -33,7 +34,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-   'whitenoise.runserver_nostatic',
     'core',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,8 +47,6 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -132,11 +130,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-STATIC_DIRS=[
-    os.path.join(BASE_DIR, 'static'),
-]
-
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+MIDDLEWARE.insert(
+    1, "whitenoise.middleware.WhiteNoiseMiddleware"
+)
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
