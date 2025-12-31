@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-7l-8*=p$cug-i13jsi%m5vvs1odd&9jify0d^9@a5$ges01%_8
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ["*.vercel.app", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".vercel.app"]
+
 
 
 
@@ -47,6 +48,8 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -135,8 +138,3 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-MIDDLEWARE.insert(
-    1, "whitenoise.middleware.WhiteNoiseMiddleware"
-)
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
