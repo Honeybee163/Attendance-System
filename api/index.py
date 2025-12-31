@@ -1,13 +1,14 @@
 import os
+import dj_database_url
 from django.conf import settings
-from django.core.handlers.wsgi import WSGIHandler
 from django.http import JsonResponse
 from django.urls import path
-import dj_database_url
+from django.core.handlers.wsgi import WSGIHandler
+import django
 
-# --------------------
-# Django configuration
-# --------------------
+# ---------------------------
+# Configure Django
+# ---------------------------
 if not settings.configured:
     settings.configure(
         DEBUG=False,
@@ -24,32 +25,40 @@ if not settings.configured:
         DATABASES={
             "default": dj_database_url.config(
                 default=os.environ.get("DATABASE_URL"),
-                conn_max_age=600,
                 ssl_require=True,
             )
         },
     )
 
-# --------------------
-# Test route (DB check)
-# --------------------
-from django.db import connection
+# IMPORTANT: initialize Django
+django.setup()
 
+# ---------------------------
+# Views
+# ---------------------------
 def home(request):
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT 1;")
-        row = cursor.fetchone()
+    try:
+        from django.db import connection
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1;")
+            value = cursor.fetchone()[0]
 
-    return JsonResponse({
-        "message": "Django + Neon + Vercel working ✅",
-        "db_test": row[0]
-    })
+        return JsonResponse({
+            "status": "ok",
+            "db": value
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            "status": "error",
+            "message": str(e)
+        }, status=500)
 
 urlpatterns = [
     path("", home),
 ]
 
-# --------------------
-# WSGI app
-# --------------------
+# ---------------------------
+# WSGI application
+# ---------------------------
 application = WSGIHandler()
