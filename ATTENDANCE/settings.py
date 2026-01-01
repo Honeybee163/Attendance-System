@@ -28,8 +28,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-7l-8*=p$cug-i13jsi%m5vvs1odd&9jify0d^9@a5$ges01%_8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".vercel.app"]
+DEBUG = False
+ALLOWED_HOSTS = ["*"]
 
 
 
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -139,6 +140,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 
-
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
