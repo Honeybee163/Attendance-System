@@ -28,10 +28,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ['.vercel.app', 'localhost']
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
+
 
 
 
@@ -89,8 +91,8 @@ WSGI_APPLICATION = 'ATTENDANCE.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
+    "default": dj_database_url.parse(
+        os.environ.get("DATABASE_URL"),
         conn_max_age=600,
         ssl_require=True,
     )
