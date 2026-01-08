@@ -16,6 +16,7 @@ from core.views import (
     Home,
     Contact,
     About,
+    favicon
 )
 
 urlpatterns = [
@@ -54,5 +55,7 @@ urlpatterns = [
     
     # download attendance csv
     path('dashboard/monthly_report/<int:classroom_id>/download_attendance_csv/', download_attendance_csv, name='download_attendance_csv'),
+    
+    path("favicon.ico", favicon),
 
 ]

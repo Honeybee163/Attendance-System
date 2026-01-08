@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 # home page
 def Home(request):
@@ -9,3 +10,8 @@ def Contact(request):
 
 def About(request):
     return render(request, 'about.html')
+
+
+def favicon(request):
+    return HttpResponse(status=204)
+
