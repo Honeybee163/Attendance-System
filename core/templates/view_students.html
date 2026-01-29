@@ -1,13 +1,14 @@
-
 {% load dict_extras %}
 {% load tz %}
 {% load attendance_extras %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>All Students</title>
+<title>Monthly Report</title>
+
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -51,6 +52,14 @@
 
     th {
         background-color: #788A72;
+        vertical-align: top;
+    }
+
+    th small {
+        display: block;
+        font-size: 12px;
+        margin-top: 4px;
+        color: red;
     }
 
     tr:hover {
@@ -61,11 +70,6 @@
         color: #fff;
         font-size: 12px;
         text-decoration: underline;
-    }
-
-    span.not-available {
-        font-size: 12px;
-        color: #ffdede;
     }
 
     .no-data {
@@ -79,7 +83,6 @@
         .report {
             font-size: 1.3rem;
         }
-
         th, td {
             padding: 0.6rem;
             font-size: 0.9rem;
@@ -90,7 +93,6 @@
         .report {
             font-size: 1.1rem;
         }
-
         th, td {
             font-size: 0.85rem;
             padding: 0.5rem;
@@ -98,54 +100,63 @@
     }
 </style>
 </head>
+
 <body>
+
 {% include "partials/nav.html" %}
 
-<h1 class='report'>Monthly Report</h1>
+<h1 class="report">Monthly Report</h1>
 
 <div class="table-container">
-    {% if not all_students %}
-        <p class="no-data">No Students Registered Yet.</p>
-    {% else %}
+
+{% if not all_students %}
+    <p class="no-data">No Students Registered Yet.</p>
+{% else %}
 
 <table>
-  <thead>
-    <tr>
-      <th>Roll No</th>
-      <th>Name</th>
+    <thead>
+        <tr>
+            <th>Roll No</th>
+            <th>Name</th>
 
-      {% for classroom in classrooms %}
-      <th>
-          {{ classroom.name }}
-          <br>
-          <a href="{% url 'download_attendance_csv' classroom.id %}" class="download-link">Download CSV</a>
-      </th>
-      {% endfor %}
-    </tr>
-  </thead>
+            {% for classroom in classrooms %}
+            <th>
+                {{ classroom.name }}
 
-  <tbody>
-    {% for student in all_students %}
-      <tr>
-        <td>{{ student.roll_number }}</td>
-        <td>{{ student.user.username }}</td>
+                <!-- ✅ Overall attendance under subject name -->
+                <small>
+                    Present Today:{{ present_students|get_item:classroom.id }}/{{ total_students }}
+                </small>
 
-        {% for classroom in classrooms %}
-            {% with key=student.user.username|stringformat:"s"|add:"_"|add:classroom.name %}
+                <a href="{% url 'download_attendance_csv' classroom.id %}" class="download-link">
+                    Download CSV
+                </a>
+            </th>
+            {% endfor %}
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for student in all_students %}
+        <tr>
+            <td>{{ student.roll_number }}</td>
+            <td>{{ student.user.username }}</td>
+
+            {% for classroom in classrooms %}
+                {% with key=student.user.username|stringformat:"s"|add:"_"|add:classroom.name %}
                 <td>
-                  {% with attended=attendance_count|get_item:key total=classes|get_item:classroom.name %}
-                      {{ attended }}/{{ total }} ({{ attended|percentage:total }}%)
-                  {% endwith %}
+                    {% with attended=attendance_count|get_item:key total=classes|get_item:classroom.name %}
+                        {{ attended }}/{{ total }} ({{ attended|percentage:total }}%)
+                    {% endwith %}
                 </td>
-            {% endwith %}
+                {% endwith %}
+            {% endfor %}
+        </tr>
         {% endfor %}
-
-      </tr>
-    {% endfor %}
-  </tbody>
+    </tbody>
 </table>
 
-    {% endif %}
+{% endif %}
 </div>
 
 </body>

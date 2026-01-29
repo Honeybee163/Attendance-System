@@ -16,7 +16,8 @@ from core.views import (
     Home,
     Contact,
     About,
-    favicon
+    favicon,
+
 )
 
 urlpatterns = [
@@ -36,10 +37,10 @@ urlpatterns = [
     path('classroom/create/', create_classroom, name='create_classroom'),
     path('classroom/view_monthly_report/', view_monthly_report, name='view_monthly_report'),
 
+
     # Dashboards
     path('dashboard/teacher/', all_classroom, name='all_classes'),
     path('dashboard/teacher/', teacher_dashboard, name='teacher_dashboard'),
-    # path('dashboard/student/', student_dashboard, name='student_dashboard'),
     
     # mark attendance
     path('dashboard/teacher/mark_attendance/',mark_attendance , name='mark_attendance'),

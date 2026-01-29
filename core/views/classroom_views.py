@@ -12,6 +12,8 @@ import os
 from django.db import transaction
 from django.core.files import File
 from django.conf import settings
+from django.db.models import Q
+
 
 
 
@@ -100,8 +102,6 @@ def mark_attendance(request):
 
 
 
-
-
 # count total number of days each student is present
 def count_present_days(request):
     all_students = StudentProfile.objects.filter(role='student')
@@ -118,15 +118,29 @@ def count_present_days(request):
    
   
   
-  
-# view monthly report
+
+
+
 @login_required
 @role_required('teacher')
 def view_monthly_report(request):
-    all_students = StudentProfile.objects.filter(role='student')
+    # ✅ total students
+    total_students = StudentProfile.objects.filter(role='student').count()
+
     profile = StudentProfile.objects.get(user=request.user)
     classrooms = profile.class_rooms.all()
-    
+    present_students = {
+    classroom.id: Attendance.objects.filter(
+        date=date.today(),
+        attendance=1,
+        classroom=classroom
+    ).values('student_profile').distinct().count()
+    for classroom in classrooms
+}
+
+
+    all_students = StudentProfile.objects.filter(role='student')
+
     attendance_count = {}
     for student in all_students:
         for classroom in classrooms:
@@ -137,40 +151,16 @@ def view_monthly_report(request):
             ).count()
             key = f"{student.user.username}_{classroom.name}"
             attendance_count[key] = total_present
-           
+
     classes = {}
     for classroom in classrooms:
         total_classes = Attendance.objects.filter(
             classroom=classroom
         ).values('date').distinct().count()
         classes[classroom.name] = total_classes
-
-        # ✅ Generate CSV if end_date has passed and report_file doesn't exist
-        if classroom.end_date < date.today() and not classroom.report_file:
-            filename = f"attendance_{classroom.name}_{classroom.end_date}.csv"
-            reports_dir = os.path.join(settings.MEDIA_ROOT, "reports")
-            os.makedirs(reports_dir, exist_ok=True)
-            file_path = os.path.join(reports_dir, filename)
-
-            # write CSV
-            with open(file_path, 'w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow(["Roll No", "Student Name", "Classroom", "Present", "Total Classes"])
-                for student in all_students:
-                    key = f"{student.user.username}_{classroom.name}"
-                    writer.writerow([
-                        student.roll_number,
-                        student.user.username,
-                        classroom.name,
-                        attendance_count.get(key, 0),
-                        classes.get(classroom.name, 0)
-                    ])
-
-            # save CSV to report_file field
-            with open(file_path, 'rb') as f:
-                classroom.report_file.save(filename, File(f), save=True)
-
     return render(request, 'view_students.html', {
+        'total_students': total_students,       
+        'present_students': present_students,    
         'all_students': all_students,
         'classrooms': classrooms,
         'attendance_count': attendance_count,
@@ -178,7 +168,11 @@ def view_monthly_report(request):
         'today': date.today(),
     })
 
-  
+
+
+
+
+
 
 
 
