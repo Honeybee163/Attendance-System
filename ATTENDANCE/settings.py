@@ -12,8 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url
+
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
+
 load_dotenv()
 
 
@@ -32,8 +34,23 @@ ALLOWED_HOSTS = ["*"]
 
 
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
-DEBUG = True
+def _env_bool(name: str, default: bool = False) -> bool:
+    val = os.getenv(name)
+    if val is None:
+        return default
+    return val.strip().lower() in {"1", "true", "yes", "y", "on"}
+
+
+# Vercel sets VERCEL="1" in deployments
+IS_VERCEL = os.getenv("VERCEL") == "1"
+
+# In production, keep DEBUG off unless explicitly enabled
+DEBUG = _env_bool("DEBUG", default=False)
+
+# SECRET_KEY must always be set. For quick deploys, we provide a fallback ONLY when DEBUG is on.
+SECRET_KEY = os.getenv("SECRET_KEY") or ("insecure-dev-key" if DEBUG else None)
+if not SECRET_KEY:
+    raise ImproperlyConfigured("SECRET_KEY environment variable is required")
 
 
 
@@ -98,10 +115,14 @@ WSGI_APPLICATION = 'ATTENDANCE.wsgi.application'
 # }
 
 
+# SQLite:
+# - local dev: BASE_DIR/db.sqlite3
+# - Vercel: use /tmp (writable but ephemeral)
+SQLITE_PATH = "/tmp/db.sqlite3" if IS_VERCEL else str(BASE_DIR / "db.sqlite3")
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": SQLITE_PATH,
     }
 }
 
@@ -152,3 +173,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# WhiteNoise (static files)
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    }
+}
