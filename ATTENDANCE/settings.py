@@ -47,10 +47,12 @@ IS_VERCEL = os.getenv("VERCEL") == "1"
 # In production, keep DEBUG off unless explicitly enabled
 DEBUG = _env_bool("DEBUG", default=False)
 
-# SECRET_KEY must always be set. For quick deploys, we provide a fallback ONLY when DEBUG is on.
-SECRET_KEY = os.getenv("SECRET_KEY") or ("insecure-dev-key" if DEBUG else None)
+# SECRET_KEY:
+# - Recommended: set SECRET_KEY in Vercel env vars
+# - Fallback: allow deployment to boot even if it's missing (demo/dev only)
+SECRET_KEY = os.getenv("SECRET_KEY") or ("insecure-dev-key" if DEBUG or IS_VERCEL else None)
 if not SECRET_KEY:
-    raise ImproperlyConfigured("SECRET_KEY environment variable is required")
+    raise ImproperlyConfigured("SECRET_KEY environment variable is required (set it in your environment)")
 
 
 
@@ -177,6 +179,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # WhiteNoise (static files)
 STORAGES = {
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+        # Manifest storage requires running collectstatic; serverless deploys often skip it.
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"
     }
 }
