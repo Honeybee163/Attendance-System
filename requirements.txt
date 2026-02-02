@@ -2,3 +2,4 @@ django==5.2.8
 whitenoise
 python-dotenv
 dj-database-url
+matplotlib
